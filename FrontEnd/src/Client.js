@@ -51,14 +51,13 @@ async function addElement() {
         mainList.appendChild(createList);
         input.value = "";
         await postRequest({task: inputValue});
-        await getRequest()
     }
 }
 
 button.addEventListener("click", addElement);
 const postRequest = async (data) => {
     try {
-        const response = await fetch(`http://localhost:8000/tasks`, {
+        const response = await fetch(`http://localhost:7000/tasks`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(data),
