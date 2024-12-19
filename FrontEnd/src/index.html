@@ -8,12 +8,19 @@
     <link rel="stylesheet" href="../Styles/client.css">
 </head>
 <body>
-<div class="container">
+<div class="container" style="max-width: 1000px;">
     <h1>To-Do List</h1>
     <div class="form">
         <input type="text" id="todoInput" placeholder="Enter a task">
         <button id="addTodo">Add</button>
-        <button id="saveTodo">Save</button>
+        <button id="saveTodo">Get</button>
+        <button id="clear">Delete</button>
+        <input type="text" id="input-delete" placeholder="Enter a task">
+        <label>
+            <input type="text" id="change" placeholder="update" >
+        </label>
+        <button id="update">Update</button>
+        <input type="text" id="input-update" placeholder="Enter a task">
     </div>
     <ul id="todoList"></ul>
 </div>

@@ -15,49 +15,17 @@ async function addElement() {
         createSpan.textContent = inputValue;
         createList.appendChild(createSpan);
 
-
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete";
-        deleteButton.addEventListener("click", () => {
-            createList.remove();
-        });
-
-
-        const createEdit = document.createElement("button");
-        createEdit.textContent = "Edit";
-        createEdit.addEventListener("click", () => {
-            const inputEdit = document.createElement("input");
-            inputEdit.value = createSpan.textContent.trim();
-            createSpan.textContent = "";
-            createSpan.appendChild(inputEdit);
-
-            const saveBtn = document.createElement("button");
-            saveBtn.textContent = "Save";
-            createSpan.appendChild(saveBtn);
-
-            saveBtn.addEventListener("click", () => {
-                const newText = inputEdit.value.trim();
-                if (newText) {
-                    createSpan.textContent = newText;
-                    saveBtn.remove();
-                    inputEdit.remove();
-                }
-            });
-        });
-
-
-        createList.appendChild(createEdit);
-        createList.appendChild(deleteButton);
         mainList.appendChild(createList);
         input.value = "";
         await postRequest({task: inputValue});
+
     }
 }
 
 button.addEventListener("click", addElement);
 const postRequest = async (data) => {
     try {
-        const response = await fetch(`http://localhost:7000/tasks`, {
+        const response = await fetch(`http://localhost:3000/tasks`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(data),
@@ -71,6 +39,64 @@ const postRequest = async (data) => {
     }
 
 }
+
+const getRequest = async () => fetch(`http://localhost:3000/tasks`)
+saveBtn.addEventListener("click", async () => {
+    try {
+        const response = await fetch("http://localhost:3000/tasks");
+        if (response.ok) {
+            const tasks = await response.json();
+            mainList.innerHTML = "";
+            tasks.forEach(task => {
+                const createList = document.createElement("li");
+                createList.classList.add("todo-li");
+                const createSpan = document.createElement("span");
+                createSpan.textContent = task.task;
+                createList.appendChild(createSpan);
+                mainList.appendChild(createList);
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+
+})
+const deleteRequest = async (task) => fetch(`http://localhost:3000/tasks/${task}`, {
+    method: "DELETE",
+    headers: {"Content-Type": "application/json"},
+})
+document.getElementById("clear").addEventListener("click", async () => {
+    const response = await deleteRequest(document.getElementById("input-delete").value);
+    const data = await response.json();
+    console.log(data);
+})
+const putRequest = async (task, newTask) => {
+    return fetch(`http://localhost:3000/tasks/${task}`, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(newTask),
+    })
+}
+document.getElementById("update").addEventListener("click", async () => {
+    const task = document.getElementById("change").value;
+    const updatedData =  {
+        task: document.getElementById("input-update").value,
+        completed: true,
+    }
+    try {
+        const response = await putRequest(task, updatedData);
+        if (!response.ok) {
+            throw new Error("Failed to update task");
+        }
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error(error);
+    }
+
+
+})
 
 
 /*
