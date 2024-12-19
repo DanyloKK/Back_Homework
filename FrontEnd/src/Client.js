@@ -40,28 +40,30 @@ const postRequest = async (data) => {
 
 }
 
-const getRequest = async () => fetch(`http://localhost:3000/tasks`)
-saveBtn.addEventListener("click", async () => {
-    try {
-        const response = await fetch("http://localhost:3000/tasks");
-        if (response.ok) {
-            const tasks = await response.json();
-            mainList.innerHTML = "";
-            tasks.forEach(task => {
-                const createList = document.createElement("li");
-                createList.classList.add("todo-li");
-                const createSpan = document.createElement("span");
-                createSpan.textContent = task.task;
-                createList.appendChild(createSpan);
-                mainList.appendChild(createList);
-            });
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const getRequest = async () => fetch(`http://localhost:3000/tasks`)
+        try {
+            const response = await fetch("http://localhost:3000/tasks");
+            if (response.ok) {
+                const tasks = await response.json();
+                mainList.innerHTML = "";
+                tasks.forEach(task => {
+                    const createList = document.createElement("li");
+                    createList.classList.add("todo-li");
+                    const createSpan = document.createElement("span");
+                    createSpan.textContent = task.task;
+                    createList.appendChild(createSpan);
+                    mainList.appendChild(createList);
+                });
+            }
+        } catch (error) {
+            console.log(error);
         }
-    } catch (error) {
-        console.log(error);
-    }
 
 
-})
+    })
+
 const deleteRequest = async (task) => fetch(`http://localhost:3000/tasks/${task}`, {
     method: "DELETE",
     headers: {"Content-Type": "application/json"},
